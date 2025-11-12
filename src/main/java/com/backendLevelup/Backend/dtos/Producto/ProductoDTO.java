@@ -1,4 +1,4 @@
-package com.backendLevelup.Backend.dtos;
+package com.backendLevelup.Backend.dtos.Producto;
 
 
 public class ProductoDTO {
