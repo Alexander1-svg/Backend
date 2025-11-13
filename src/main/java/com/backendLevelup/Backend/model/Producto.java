@@ -24,7 +24,7 @@ public class Producto {
     private String descripcion;
 
     @Column(nullable = false)
-    private Integer stock;
+    private int stock;
 
     @Column(nullable = false)
     private BigDecimal precio;

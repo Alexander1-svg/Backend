@@ -1,11 +1,13 @@
 package com.backendLevelup.Backend.init;
 
 import com.backendLevelup.Backend.model.Categoria;
+import com.backendLevelup.Backend.model.Producto;
 import com.backendLevelup.Backend.repository.CategoriaRepository;
 import com.backendLevelup.Backend.repository.ProductoRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.logging.Logger;
 
 @Component
@@ -26,6 +28,8 @@ public class DataInitializer implements CommandLineRunner {
 
         if  (categoriaRepository.count() == 0 && productoRepository.count() == 0) {
             log.info("Base de datos vacia. Sembrando datos iniciales del catalogo...");
+
+            // --- Crear categorias ---
 
             Categoria accesorios = new Categoria();
             accesorios.setNombre("Accesorios");
@@ -58,6 +62,17 @@ public class DataInitializer implements CommandLineRunner {
             Categoria JuegosdeMesa = new Categoria();
             JuegosdeMesa.setNombre("Juegos de");
             JuegosdeMesa = categoriaRepository.save(JuegosdeMesa);
+
+            // --- Crear productos ---
+            Producto Logitech_G733_Wireless  = new Producto();
+            Logitech_G733_Wireless.setCodigo("AP001");
+            Logitech_G733_Wireless.setNombre("Logitech G733 Wireless");
+            Logitech_G733_Wireless.setDescripcion("Auriculares inalámbricos para juegos LIGHTSPEED con LIGHTSYNC RGB");
+            Logitech_G733_Wireless.setPrecio(new BigDecimal("159990.00"));
+            Logitech_G733_Wireless.setStock(10);
+            Logitech_G733_Wireless.setCategoria(accesorios);
+            Logitech_G733_Wireless.setImagenUrl("https://levelupgamer-img.s3.us-east-1.amazonaws.com/logitech_g733.png");
+            productoRepository.save(Logitech_G733_Wireless);
         }
     }
 }

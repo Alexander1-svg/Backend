@@ -46,7 +46,7 @@ public class ProductoServiceImpl implements ProductoService {
             throw new RuntimeException("Categoria no encontrada " + nombreCategoria);
         }
 
-        List<Producto> productos = productoRepository.findByCategoria(nombreCategoria);
+        List<Producto> productos = productoRepository.findByCategoriaNombre(nombreCategoria);
 
         return productos.stream()
                 .map(productoAssembler::toDTO)
