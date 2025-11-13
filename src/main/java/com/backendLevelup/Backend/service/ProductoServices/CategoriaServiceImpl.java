@@ -1,31 +1,37 @@
 package com.backendLevelup.Backend.service.ProductoServices;
 
+import com.backendLevelup.Backend.assemblers.CategoriaAssembler;
 import com.backendLevelup.Backend.dtos.Producto.CategoriaDTO;
+import com.backendLevelup.Backend.model.Categoria;
 import com.backendLevelup.Backend.repository.CategoriaRepository;
-import com.backendLevelup.Backend.repository.ProductoRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CategoriaServiceImpl implements CategoriaService {
 
     private final  CategoriaRepository categoriaRepository;
+    private final CategoriaAssembler categoriaAssembler;
 
-    public CategoriaServiceImpl(CategoriaRepository categoriaRepository) {
+    public CategoriaServiceImpl(CategoriaRepository categoriaRepository, CategoriaAssembler categoriaAssembler) {
         this.categoriaRepository = categoriaRepository;
+        this.categoriaAssembler = categoriaAssembler;
     }
+
 
     @Override
     public List<CategoriaDTO> getAllCategorias() {
-        return List.of();
-    }
+        List<Categoria> categorias = categoriaRepository.findAll();
 
-    @Override
-    public CategoriaDTO createCategoria(CategoriaDTO categoriaDTO) {
-        return null;
+        return categorias.stream()
+                .map(categoriaAssembler::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public CategoriaDTO getCategoriaById(Long id) {
-        return null;
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+        return categoriaAssembler.toDTO(categoria);
     }
 }
