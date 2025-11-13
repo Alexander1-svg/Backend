@@ -2,6 +2,8 @@ package com.backendLevelup.Backend.dtos.Producto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @ToString
@@ -11,6 +13,8 @@ public class ProductoDTO {
     private Long id;
     private String nombre;
     private String descripcion;
-    private Double precio;
+    private int Stock;
+    private BigDecimal precio;
+    private String codigo;
     private String nombreCategoria;
 }

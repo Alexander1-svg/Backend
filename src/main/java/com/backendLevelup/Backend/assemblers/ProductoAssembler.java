@@ -10,9 +10,11 @@ public class ProductoAssembler {
     public ProductoDTO toDTO(Producto producto) {
         ProductoDTO pdto = new ProductoDTO();
         pdto.setId(producto.getId());
-        pdto.setNombre(producto.getName());
-        pdto.setDescripcion(producto.getDescription());
-        pdto.setPrecio(producto.getPrice());
+        pdto.setNombre(producto.getNombre());
+        pdto.setDescripcion(producto.getDescripcion());
+        pdto.setStock(producto.getStock());
+        pdto.setPrecio(producto.getPrecio());
+        pdto.setCodigo(producto.getCodigo());
 
         if (producto.getCategoria() != null) {
             pdto.setNombreCategoria(producto.getCategoria().getNombre());

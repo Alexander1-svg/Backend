@@ -3,6 +3,8 @@ package com.backendLevelup.Backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @ToString
 @Table(name="Productos")
@@ -16,13 +18,19 @@ public class Producto {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String name;
+    private String nombre;
 
     @Column(length = 1000)
-    private String description;
+    private String descripcion;
 
     @Column(nullable = false)
-    private Double price;
+    private Integer stock;
+
+    @Column(nullable = false)
+    private BigDecimal precio;
+
+    @Column(nullable = false, unique = true)
+    private String codigo;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)

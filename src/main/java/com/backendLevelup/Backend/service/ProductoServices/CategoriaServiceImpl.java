@@ -4,10 +4,12 @@ import com.backendLevelup.Backend.assemblers.CategoriaAssembler;
 import com.backendLevelup.Backend.dtos.Producto.CategoriaDTO;
 import com.backendLevelup.Backend.model.Categoria;
 import com.backendLevelup.Backend.repository.CategoriaRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class CategoriaServiceImpl implements CategoriaService {
 
     private final  CategoriaRepository categoriaRepository;
