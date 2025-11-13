@@ -15,6 +15,7 @@ public class ProductoAssembler {
         pdto.setStock(producto.getStock());
         pdto.setPrecio(producto.getPrecio());
         pdto.setCodigo(producto.getCodigo());
+        pdto.setImagenUrl(producto.getImagenUrl());
 
         if (producto.getCategoria() != null) {
             pdto.setNombreCategoria(producto.getCategoria().getNombre());

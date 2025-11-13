@@ -41,14 +41,14 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public ProductoDTO getProductosByCategorias(String nombreCategoria) {
+    public List<ProductoDTO> getProductosByCategoria(String nombreCategoria) {
         if (!categoriaRepository.existsByNombre(nombreCategoria)){
-            throw new RuntimeException("Categoria no encontrada" + nombreCategoria);
+            throw new RuntimeException("Categoria no encontrada " + nombreCategoria);
         }
 
         List<Producto> productos = productoRepository.findByCategoria(nombreCategoria);
 
-        return (ProductoDTO) productos.stream()
+        return productos.stream()
                 .map(productoAssembler::toDTO)
                 .collect(Collectors.toList());
     }
