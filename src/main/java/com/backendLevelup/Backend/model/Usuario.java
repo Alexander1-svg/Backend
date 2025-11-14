@@ -1,9 +1,7 @@
 package com.backendLevelup.Backend.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -17,11 +15,25 @@ import java.time.LocalDate;
 public class Usuario {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String nombre;
+
+    @Column(unique = true,   nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
     private LocalDate fechaNacimiento;
+
+    @Column(nullable = false)
     private boolean tieneDescuentoDuoc = false;
+
+    @Column(nullable = false)
+    private String rol;
 
 }

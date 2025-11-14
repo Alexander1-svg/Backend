@@ -4,7 +4,9 @@ import com.backendLevelup.Backend.model.Categoria;
 import com.backendLevelup.Backend.model.Producto;
 import com.backendLevelup.Backend.repository.CategoriaRepository;
 import com.backendLevelup.Backend.repository.ProductoRepository;
+import com.backendLevelup.Backend.repository.UsuarioRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -18,7 +20,7 @@ public class DataInitializer implements CommandLineRunner {
     private final CategoriaRepository categoriaRepository;
     private final ProductoRepository productoRepository;
 
-    public DataInitializer(CategoriaRepository categoriaRepository, ProductoRepository productoRepository) {
+    public DataInitializer(CategoriaRepository categoriaRepository, ProductoRepository productoRepository, UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.categoriaRepository = categoriaRepository;
         this.productoRepository = productoRepository;
     }
@@ -30,7 +32,6 @@ public class DataInitializer implements CommandLineRunner {
             log.info("Base de datos vacia. Sembrando datos iniciales del catalogo...");
 
             // --- Crear categorias ---
-
             Categoria accesorios = new Categoria();
             accesorios.setNombre("Accesorios");
             accesorios = categoriaRepository.save(accesorios);
@@ -44,7 +45,7 @@ public class DataInitializer implements CommandLineRunner {
             consolas = categoriaRepository.save(consolas);
 
             Categoria Sillas_gamer = new Categoria();
-            Sillas_gamer.setNombre("Sillas Gamer");
+            Sillas_gamer.setNombre("Sillas_Gamer");
             Sillas_gamer = categoriaRepository.save(Sillas_gamer);
 
             Categoria Mouse_teclado = new Categoria();
@@ -56,12 +57,13 @@ public class DataInitializer implements CommandLineRunner {
             Mousepads = categoriaRepository.save(Mousepads);
 
             Categoria Poleras_polerones = new Categoria();
-            Poleras_polerones.setNombre("Poleras Polerones");
+            Poleras_polerones.setNombre("Poleras_Polerones");
             Poleras_polerones = categoriaRepository.save(Poleras_polerones);
 
             Categoria JuegosdeMesa = new Categoria();
-            JuegosdeMesa.setNombre("Juegos de");
+            JuegosdeMesa.setNombre("Juegos_de_Mesa");
             JuegosdeMesa = categoriaRepository.save(JuegosdeMesa);
+            log.info("Categorias creadas con éxito.");
 
             // --- Crear productos ---
             Producto Logitech_G733_Wireless  = new Producto();
