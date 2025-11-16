@@ -26,6 +26,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/productos/**").permitAll()
                         .requestMatchers("/api/categorias/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/carritos/**").authenticated()
                         .anyRequest().authenticated()
                 );
         return http.build();
