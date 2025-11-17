@@ -39,10 +39,13 @@ public class UsuarioServiceImpl implements UsuarioService{
         boolean esDuoc = false;
         String rol = "ROLE_USER";
 
-        if (emailMin.endsWith("@duoc.cl")){
+        if (emailMin.endsWith("@duoc.cl") || emailMin.endsWith("@duocuc.cl")){
             esDuoc = true;
         } else if (emailMin.endsWith("@levelup.cl")) {
             rol = "ROLE_ADMIN";
+        // Validación para que solo mayores de edad puedan registrarse
+        } else if (Period.between(LocalDate.parse(dto.getFechaNacimiento()), LocalDate.now()).getYears() < 18) {
+            throw new UsuarioValidationException("Debe ser mayor de edad para registrarse");
         }
 
         String passwordEncript = passwordEncoder.encode(dto.getPassword());
