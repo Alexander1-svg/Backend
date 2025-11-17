@@ -36,7 +36,7 @@ public class Producto {
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
 
-    @Column
+    @Column(name = "imagen_url")
     private String imagenUrl;
 
 }

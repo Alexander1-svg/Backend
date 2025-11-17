@@ -35,11 +35,6 @@ public class UsuarioServiceImpl implements UsuarioService{
             throw new UsuarioValidationException("Email existente");
         }
 
-        //Validacion mayor de edad
-        if (Period.between(dto.getFechaNacimiento(), LocalDate.now()).getYears() < 18){
-            throw new UsuarioValidationException("Debe ser mayor de edad");
-        }
-
         String emailMin = dto.getEmail().toLowerCase();
         boolean esDuoc = false;
         String rol = "ROLE_USER";
@@ -56,7 +51,7 @@ public class UsuarioServiceImpl implements UsuarioService{
         nuevoUsuario.setNombre(dto.getNombre());
         nuevoUsuario.setEmail(dto.getEmail());
         nuevoUsuario.setPassword(passwordEncript);
-        nuevoUsuario.setFechaNacimiento(dto.getFechaNacimiento());
+        nuevoUsuario.setFechaNacimiento(LocalDate.parse(dto.getFechaNacimiento()));
         nuevoUsuario.setTieneDescuentoDuoc(esDuoc);
         nuevoUsuario.setRol(rol);
 
