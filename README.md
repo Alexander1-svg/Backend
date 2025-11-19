@@ -1,4 +1,9 @@
 ﻿# Levelup-backend
-<img width="900" height="500" alt="image" src="https://github.com/user-attachments/assets/73c01ef6-b0db-4e99-a5ac-c06f753375d8" />
+
+![Java](https://img.shields.io/badge/Java-21-blue?logo=java&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.6-brightgreen?logo=springboot)  
+
+---
 
 Aplicación SpringBoot monolito
+
