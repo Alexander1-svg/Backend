@@ -21,24 +21,22 @@ public class BlogController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BlogDTO>> getAllPosts() {
+    public ResponseEntity<List<BlogDTO>> getAllBlogs() {
         // Llama al servicio para obtener todas las publicaciones ordenadas
         return ResponseEntity.ok(blogService.getAllBlogs());
     }
 
     // --- 2. GET: Ver detalle de una publicación por ID ---
-    // (Público)
     @GetMapping("/{blogId}")
-    public ResponseEntity<BlogDTO> getPostById(@PathVariable Long blogId) {
+    public ResponseEntity<BlogDTO> getBlogById(@PathVariable Long blogId) {
         return ResponseEntity.ok(blogService.getBlogById(blogId));
     }
 
     // --- 3. POST: Crear una nueva publicación ---
-    // (Requiere autenticación: @AuthenticationPrincipal)
     @PostMapping
-    public ResponseEntity<BlogDTO> createPost(
+    public ResponseEntity<BlogDTO> createBlog(
             @RequestBody BlogDTO blogDto,
-            @AuthenticationPrincipal UserDetails userDetails) { // <-- Obtener el usuario logueado
+            @AuthenticationPrincipal UserDetails userDetails) {
 
         // Obtener el email del usuario logueado (Spring Security usa el email como 'username')
         String emailUsuario = userDetails.getUsername();
@@ -50,9 +48,8 @@ public class BlogController {
     }
 
     // --- 4. PUT: Actualizar una publicación existente ---
-    // (Requiere autenticación y verificación de autoría en el Service)
     @PutMapping("/{blogId}")
-    public ResponseEntity<BlogDTO> updatePost(
+    public ResponseEntity<BlogDTO> updateBlog(
             @PathVariable Long blogId,
             @RequestBody BlogDTO blogDto,
             @AuthenticationPrincipal UserDetails userDetails) {
@@ -66,9 +63,8 @@ public class BlogController {
     }
 
     // --- 5. DELETE: Eliminar una publicación ---
-    // (Requiere autenticación y verificación de autoría en el Service)
     @DeleteMapping("/{blogId}")
-    public ResponseEntity<Void> deletePost(
+    public ResponseEntity<Void> deleteBlog(
             @PathVariable Long blogId,
             @AuthenticationPrincipal UserDetails userDetails) {
 
