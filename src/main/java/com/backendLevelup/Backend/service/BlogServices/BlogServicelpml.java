@@ -46,34 +46,26 @@ public class BlogServicelpml implements BlogService{
 
     @Override
     public BlogDTO createBlog(BlogDTO blogDto, String emailUsuario) {
-        // 1. Obtener el Usuario que está creando el post
         Usuario autor = usuarioRepository.findByEmail(emailUsuario)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con email: " + emailUsuario));
 
-        // 2. Mapear DTO a Entidad y configurar
         Blog newPost = blogAssembler.toEntity(blogDto);
-        newPost.setAutor(autor); // Asigna el objeto Usuario
-        newPost.setFechaPublicacion(LocalDateTime.now()); // Marca de tiempo de creación
+        newPost.setAutor(autor);
+        newPost.setFechaPublicacion(LocalDateTime.now());
 
-        // 3. Guardar y mapear de vuelta a DTO
         Blog savedPost = blogRepository.save(newPost);
         return blogAssembler.toDTO(savedPost);
     }
-
-    // --- Lógica de Actualización (PUT) ---
 
     @Override
     public BlogDTO updateBlog(Long id, BlogDTO blogDto, String emailUsuario) {
         Blog existingPost = blogRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Publicación no encontrada con ID: " + id));
 
-        // **Verificación de Seguridad:** Solo el autor o un ADMIN puede actualizar
         if (!existingPost.getAutor().getEmail().equals(emailUsuario)) {
-            // Se puede agregar una verificación de rol aquí también si fuera necesario
             throw new SecurityException("No tiene permisos para actualizar esta publicación.");
         }
 
-        // Actualiza los campos desde el DTO
         existingPost.setTitulo(blogDto.getTitulo());
         existingPost.setContenido(blogDto.getContenido());
 
@@ -81,14 +73,12 @@ public class BlogServicelpml implements BlogService{
         return blogAssembler.toDTO(updatedPost);
     }
 
-    // --- Lógica de Eliminación (DELETE) ---
 
     @Override
     public void deleteBlog(Long id, String emailUsuario) {
         Blog postToDelete = blogRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Publicación no encontrada con ID: " + id));
 
-        // **Verificación de Seguridad:** Solo el autor o un ADMIN puede eliminar
         if (!postToDelete.getAutor().getEmail().equals(emailUsuario)) {
             throw new SecurityException("No tiene permisos para eliminar esta publicación.");
         }
