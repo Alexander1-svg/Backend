@@ -36,4 +36,11 @@ public class CategoriaServiceImpl implements CategoriaService {
                 .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
         return categoriaAssembler.toDTO(categoria);
     }
+
+    @Override
+    public CategoriaDTO getCategoriaByNombre(String nombre) {
+        Categoria categoria = categoriaRepository.findByNombre(nombre)
+                .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+        return categoriaAssembler.toDTO(categoria);
+    }
 }

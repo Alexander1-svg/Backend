@@ -23,15 +23,10 @@ public class CarritoAssembler {
         dto.setId(item.getId());
         dto.setProductoId(item.getProducto().getId());
         dto.setNombreProducto(item.getProducto().getNombre());
-
-        BigDecimal precioDecimal = item.getProducto().getPrecio();
-
-        double precio = precioDecimal.doubleValue();
-
-        dto.setPrecioUnitario(precio);
+        dto.setPrecioUnitario(item.getProducto().getPrecio());
         dto.setCantidad(item.getCantidad());
 
-        dto.setSubtotal(precio * item.getCantidad());
+        dto.setSubtotal(item.getProducto().getPrecio() * item.getCantidad());
 
         return dto;
     }

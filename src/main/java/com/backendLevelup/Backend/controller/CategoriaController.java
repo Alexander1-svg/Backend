@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/categorias")
+@RequestMapping("api/v1/categorias")
 public class CategoriaController {
 
     private final CategoriaService categoriaService;
@@ -22,6 +22,7 @@ public class CategoriaController {
         this.categoriaService = categoriaService;
     }
 
+    // Endpoint para obtener todas las categorías
     @GetMapping
     public ResponseEntity<List<CategoriaDTO>> getAllCategorias() {
         List<CategoriaDTO> categorias = categoriaService.getAllCategorias();
@@ -29,9 +30,17 @@ public class CategoriaController {
         return ResponseEntity.ok(categorias);
     }
 
+    // Endpoint para obtener una categoría por su ID
     @GetMapping("/{id}")
     public ResponseEntity<CategoriaDTO> getCategoriaById(@PathVariable String id) {
         CategoriaDTO categoria = categoriaService.getCategoriaById(Long.valueOf(id));
+        return ResponseEntity.ok(categoria);
+    }
+
+    // Endpoint para obtener una categoría por su nombre
+    @GetMapping("/nombre/{nombreCategoria}")
+    public ResponseEntity<CategoriaDTO> getCategoriaByNombre(@PathVariable String nombreCategoria) {
+        CategoriaDTO categoria = categoriaService.getCategoriaByNombre(nombreCategoria);
         return ResponseEntity.ok(categoria);
     }
 

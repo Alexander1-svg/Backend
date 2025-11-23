@@ -8,5 +8,6 @@ public interface CategoriaService {
 
     List<CategoriaDTO> getAllCategorias();
     CategoriaDTO getCategoriaById(Long id);
+    CategoriaDTO getCategoriaByNombre(String nombre);
 
 }

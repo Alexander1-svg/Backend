@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/carrito")
+@RequestMapping("/api/v1/carrito")
 public class CarritoController {
 
     private final CarritoService carritoService;

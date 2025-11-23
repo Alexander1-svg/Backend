@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/productos/{productoId}/comentarios")
+@RequestMapping("/api/v1/productos/{productoId}/comentarios")
 public class ComentarioController {
 
     private final ComentarioService comentarioService;
