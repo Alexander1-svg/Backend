@@ -20,7 +20,6 @@ public class BlogAssembler {
 
         // Obtener el nombre del autor del objeto Usuario
         if (entidad.getAutor() != null) {
-            // Asumimos que quieres mostrar el campo 'nombre' del Usuario
             dto.setAutor(entidad.getAutor().getNombre());
         }
 
