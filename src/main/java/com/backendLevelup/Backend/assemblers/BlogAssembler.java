@@ -3,9 +3,11 @@ package com.backendLevelup.Backend.assemblers;
 
 import com.backendLevelup.Backend.dtos.Blog.BlogDTO;
 import com.backendLevelup.Backend.model.Blog;
+import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
 
+@Component
 public class BlogAssembler {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
