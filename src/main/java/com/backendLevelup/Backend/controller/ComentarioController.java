@@ -1,7 +1,6 @@
 package com.backendLevelup.Backend.controller;
 
 import com.backendLevelup.Backend.dtos.Comentario.ComentarioDTO;
-import com.backendLevelup.Backend.model.Comentario;
 import com.backendLevelup.Backend.service.ComentarioServices.ComentarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,13 +30,13 @@ public class ComentarioController {
     public ResponseEntity<ComentarioDTO> crearComentario(
             @PathVariable Long productoId,
             @RequestBody ComentarioDTO nuevoComentarioDto,
-            @AuthenticationPrincipal UserDetails userDetails) { // <-- ¡Clave para obtener el usuario!
+            @AuthenticationPrincipal UserDetails userDetails) {
 
         String email = userDetails.getUsername();
 
         ComentarioDTO guardado = comentarioService.guardarComentario(
                 productoId,
-                nuevoComentarioDto,   // Pasamos el DTO
+                nuevoComentarioDto,
                 email
         );
 
