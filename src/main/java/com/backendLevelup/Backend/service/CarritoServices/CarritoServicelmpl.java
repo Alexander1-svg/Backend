@@ -42,7 +42,6 @@ public class CarritoServicelmpl implements CarritoService {
     }
 
     private Usuario getUsuarioByEmail(String email) {
-        // Usa findByEmail, ya que 'email' es el identificador de login en tu modelo Usuario
         return usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con email: " + email));
     }
@@ -53,19 +52,15 @@ public class CarritoServicelmpl implements CarritoService {
                 .orElseGet(() -> {
                     Carrito nuevoCarrito = new Carrito();
                     nuevoCarrito.setUsuario(usuario);
-                    // Spring Data JPA lo guarda automáticamente si es una entidad persistente
                     return carritoRepository.save(nuevoCarrito);
                 });
     }
-
-    // --- Implementación de la Interfaz CarritoService ---
 
     @Override
     public CarritoDTO getOrCreateCarrito(String emailUsuario) {
         Usuario usuario = getUsuarioByEmail(emailUsuario);
         Carrito carrito = getOrCreateCarritoEntity(usuario);
 
-        // Mapea la entidad a DTO y calcula los totales
         return carritoAssembler.toDTO(carrito);
     }
 
@@ -81,27 +76,20 @@ public class CarritoServicelmpl implements CarritoService {
         Producto producto = productoRepository.findById(itemDto.getProductoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con ID: " + itemDto.getProductoId()));
 
-        // 1. Busca si el ítem (ProductoId) ya existe en este carrito
         Optional<CarritoItem> existingItemOpt = itemRepository.findByCarritoIdAndProductoId(carrito.getId(), producto.getId());
 
         if (existingItemOpt.isPresent()) {
-            // Caso 1: El ítem ya existe, incrementamos la cantidad
             CarritoItem existingItem = existingItemOpt.get();
             existingItem.setCantidad(existingItem.getCantidad() + itemDto.getCantidad());
             itemRepository.save(existingItem);
         } else {
-            // Caso 2: El ítem es nuevo, creamos un CarritoItem
             CarritoItem newItem = new CarritoItem();
             newItem.setCarrito(carrito);
             newItem.setProducto(producto);
             newItem.setCantidad(itemDto.getCantidad());
-
-            // Relaciona el ítem con el carrito (y lo guarda, debido a CascadeType.ALL en Carrito)
-            // Si no usaste addItem() en Carrito, usa itemRepository.save(newItem);
             carrito.getItems().add(newItem);
         }
 
-        // Devuelve la vista actualizada
         return carritoAssembler.toDTO(carrito);
     }
 
@@ -113,22 +101,18 @@ public class CarritoServicelmpl implements CarritoService {
         CarritoItem itemToRemove = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ítem de carrito no encontrado con ID: " + itemId));
 
-        // Verificación de seguridad: Asegura que el ítem pertenece al carrito del usuario
         if (!itemToRemove.getCarrito().getId().equals(carrito.getId())) {
             throw new SecurityException("El ítem no pertenece al carrito del usuario.");
         }
 
-        // Elimina el ítem (orphanRemoval=true en Carrito se encargará de la colección)
         itemRepository.delete(itemToRemove);
 
-        // Devuelve el carrito actualizado después de la eliminación
         return carritoAssembler.toDTO(carrito);
     }
 
     @Override
     public CarritoDTO actualizarCantidadItem(String emailUsuario, Long itemId, int nuevaCantidad) {
         if (nuevaCantidad <= 0) {
-            // Si la cantidad es cero o menos, llama al método de eliminación
             return removerProductoDelCarrito(emailUsuario, itemId);
         }
 
@@ -138,15 +122,13 @@ public class CarritoServicelmpl implements CarritoService {
         CarritoItem itemToUpdate = itemRepository.findById(itemId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ítem de carrito no encontrado con ID: " + itemId));
 
-        // Verificación de seguridad
         if (!itemToUpdate.getCarrito().getId().equals(carrito.getId())) {
             throw new SecurityException("El ítem no pertenece al carrito del usuario.");
         }
 
         itemToUpdate.setCantidad(nuevaCantidad);
-        itemRepository.save(itemToUpdate); // Guarda el cambio de cantidad
+        itemRepository.save(itemToUpdate);
 
-        // Devuelve el carrito actualizado
         return carritoAssembler.toDTO(carrito);
     }
 

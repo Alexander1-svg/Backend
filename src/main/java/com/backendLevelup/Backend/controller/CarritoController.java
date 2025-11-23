@@ -18,7 +18,6 @@ public class CarritoController {
         this.carritoService = carritoService;
     }
 
-    // 1. Obtener el Carrito del usuario logueado (GET /api/carrito)
     @GetMapping
     public ResponseEntity<CarritoDTO> getCarrito(@AuthenticationPrincipal UserDetails userDetails) {
         String email = userDetails.getUsername();
@@ -26,7 +25,6 @@ public class CarritoController {
         return ResponseEntity.ok(carrito);
     }
 
-    // 2. Añadir un producto (POST /api/carrito/agregar)
     @PostMapping("/agregar")
     public ResponseEntity<CarritoDTO> agregarItem(
             @RequestBody CarritoItemDetalleDTO itemDto,
@@ -37,7 +35,6 @@ public class CarritoController {
         return ResponseEntity.ok(carritoActualizado);
     }
 
-    // 3. Remover un ítem (DELETE /api/carrito/remover/{itemId})
     @DeleteMapping("/remover/{itemId}")
     public ResponseEntity<CarritoDTO> removerItem(
             @PathVariable Long itemId,

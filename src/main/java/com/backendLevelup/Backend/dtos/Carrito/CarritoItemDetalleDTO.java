@@ -11,15 +11,9 @@ import lombok.NoArgsConstructor;
 public class CarritoItemDetalleDTO {
 
     private Long id;
-
-    // Datos del Producto
     private Long productoId;
     private String nombreProducto;
     private double precioUnitario;
-
-    // Datos del Ítem
     private Integer cantidad;
-
-    // Dato Calculado
     private double subtotal;
 }

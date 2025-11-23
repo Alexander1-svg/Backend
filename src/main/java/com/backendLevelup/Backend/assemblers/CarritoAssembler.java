@@ -24,19 +24,13 @@ public class CarritoAssembler {
         dto.setProductoId(item.getProducto().getId());
         dto.setNombreProducto(item.getProducto().getNombre());
 
-        // CORRECCIÓN CLAVE: Obtener el BigDecimal y convertirlo a double
-
-        // 1. Obtener el precio como BigDecimal
         BigDecimal precioDecimal = item.getProducto().getPrecio();
 
-        // 2. Convertir a double para asignarlo al DTO
-        // Usamos .doubleValue() para la conversión
         double precio = precioDecimal.doubleValue();
 
         dto.setPrecioUnitario(precio);
         dto.setCantidad(item.getCantidad());
 
-        // 3. Calcular el subtotal (multiplicación de double)
         dto.setSubtotal(precio * item.getCantidad());
 
         return dto;
@@ -46,10 +40,8 @@ public class CarritoAssembler {
         CarritoDTO dto = new CarritoDTO();
         dto.setId(carrito.getId());
 
-        // Mapear cada ítem a su DTO de detalle y calcular el total
         double total = 0;
 
-        // Nota: Asegúrate de que la colección de CarritoItem en Carrito no sea nula.
         if (carrito.getItems() != null) {
             List<CarritoItemDetalleDTO> items = carrito.getItems().stream()
                     .map(this::toDetalleDTO)
