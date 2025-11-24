@@ -14,4 +14,5 @@ public class CarritoDTO {
     private Long id;
     private List<CarritoItemDetalleDTO> items;
     private double totalGeneral;
+    private boolean enabled;
 }

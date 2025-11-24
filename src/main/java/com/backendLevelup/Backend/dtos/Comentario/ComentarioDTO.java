@@ -14,4 +14,5 @@ public class ComentarioDTO {
     private String nombreUsuario;
     private Long productoId;
     private String fechaCreacion;
+    private boolean enabled;
 }

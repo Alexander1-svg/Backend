@@ -3,6 +3,7 @@ package com.backendLevelup.Backend.service.UsuarioServices;
 import com.backendLevelup.Backend.dtos.Usuario.LoginDTO;
 import com.backendLevelup.Backend.dtos.Usuario.RegistroUsuarioDTO;
 import com.backendLevelup.Backend.dtos.Usuario.UsuarioDTO;
+import com.backendLevelup.Backend.model.Usuario;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

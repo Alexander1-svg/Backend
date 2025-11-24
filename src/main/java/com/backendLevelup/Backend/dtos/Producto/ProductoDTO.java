@@ -18,4 +18,5 @@ public class ProductoDTO {
     private String codigo;
     private String nombreCategoria;
     private String imagenUrl;
+    private boolean enabled;
 }

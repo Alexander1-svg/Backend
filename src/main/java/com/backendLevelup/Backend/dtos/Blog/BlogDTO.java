@@ -15,4 +15,5 @@ public class BlogDTO {
     private String contenido;
     private String autor;
     private String fechaPublicacion;
+    private boolean enabled;
 }

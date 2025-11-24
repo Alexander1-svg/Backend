@@ -2,7 +2,9 @@ package com.backendLevelup.Backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -10,7 +12,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Roles")
+@Table(name = "roles")
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class Rol {
@@ -18,7 +22,7 @@ public class Rol {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nombre", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private String nombre;
 
     @Embedded
@@ -26,12 +30,14 @@ public class Rol {
 
     @JsonIgnoreProperties({"roles"})
     @ManyToMany(mappedBy = "roles")
-    private List<Usuario> usuarios;
+    private List<Usuario> usuarios = new ArrayList<>();
 
-    public Rol(){this.usuarios = new ArrayList<>();}
+    public Rol(Long id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
 
-    public Rol(String nombre){
-        this();
+    public Rol(String nombre) {
         this.nombre = nombre;
     }
 
@@ -47,11 +53,14 @@ public class Rol {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Rol rol = (Rol) o;
         return Objects.equals(id, rol.id) && Objects.equals(nombre, rol.nombre);
     }
 
     @Override
-    public int hashCode(){return Objects.hash(id, nombre);}
+    public int hashCode() {
+        return Objects.hash(id, nombre);
+    }
 }

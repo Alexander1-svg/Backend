@@ -2,6 +2,8 @@ package com.backendLevelup.Backend.dtos.Usuario;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -11,6 +13,7 @@ public class UsuarioDTO {
     private String nombre;
     private String email;
     private boolean tieneDescuentoDuoc;
-    private String rol;
+    private List<String> roles;
+    private boolean enabled;
 
 }
