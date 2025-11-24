@@ -3,20 +3,21 @@ package com.backendLevelup.Backend.controller;
 import com.backendLevelup.Backend.dtos.Carrito.CarritoDTO;
 import com.backendLevelup.Backend.dtos.Carrito.CarritoItemDetalleDTO;
 import com.backendLevelup.Backend.service.CarritoServices.CarritoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/carrito")
+@CrossOrigin(origins = "http://localhost:5173", originPatterns = "*")
+@Validated
 public class CarritoController {
 
-    private final CarritoService carritoService;
-
-    public CarritoController(CarritoService carritoService) {
-        this.carritoService = carritoService;
-    }
+    @Autowired
+    private CarritoService carritoService;
 
     @GetMapping
     public ResponseEntity<CarritoDTO> getCarrito(@AuthenticationPrincipal UserDetails userDetails) {

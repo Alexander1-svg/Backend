@@ -4,23 +4,19 @@ import com.backendLevelup.Backend.dtos.Producto.CategoriaDTO;
 import com.backendLevelup.Backend.service.ProductoServices.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/categorias")
+@CrossOrigin(origins = "http://localhost:5173", originPatterns = "*")
+@Validated
 public class CategoriaController {
 
-    private final CategoriaService categoriaService;
-
     @Autowired
-    public CategoriaController(CategoriaService categoriaService) {
-        this.categoriaService = categoriaService;
-    }
+    private CategoriaService categoriaService;
 
     // Endpoint para obtener todas las categorías
     @GetMapping

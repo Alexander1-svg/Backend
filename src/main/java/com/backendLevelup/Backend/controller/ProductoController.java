@@ -4,21 +4,19 @@ import com.backendLevelup.Backend.dtos.Producto.ProductoDTO;
 import com.backendLevelup.Backend.service.ProductoServices.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173", originPatterns = "*")
 @RestController
 @RequestMapping("api/v1/productos")
+@Validated
 public class ProductoController {
 
-    private final ProductoService productoService;
-
     @Autowired
-    public ProductoController(ProductoService productoService) {
-        this.productoService = productoService;
-    }
+    private ProductoService productoService;
 
     @GetMapping
     public ResponseEntity<List<ProductoDTO>> getAllProductos() {

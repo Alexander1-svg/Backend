@@ -5,20 +5,26 @@ import com.backendLevelup.Backend.dtos.Usuario.RegistroUsuarioDTO;
 import com.backendLevelup.Backend.dtos.Usuario.UsuarioDTO;
 import com.backendLevelup.Backend.service.UsuarioServices.UsuarioService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@CrossOrigin(origins = "http://localhost:5173", originPatterns = "*")
 @RestController
 @RequestMapping("/api/v1/auth")
+@Validated
 public class AuthController {
 
-    private final UsuarioService usuarioService;
+    @Autowired
+    private UsuarioService usuarioService;
 
-    public AuthController(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
+    @GetMapping
+    public ResponseEntity<List<UsuarioDTO>> getAllUsuarios(){
+        return ResponseEntity.status(HttpStatus.OK).body(this.usuarioService.findAll());
     }
 
     @PostMapping("/register")

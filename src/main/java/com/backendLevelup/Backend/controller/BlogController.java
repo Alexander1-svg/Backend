@@ -2,23 +2,25 @@ package com.backendLevelup.Backend.controller;
 
 import com.backendLevelup.Backend.dtos.Blog.BlogDTO;
 import com.backendLevelup.Backend.service.BlogServices.BlogService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/blog")
+@CrossOrigin(origins = "http://localhost:5173", originPatterns = "*")
+@Validated
 public class BlogController {
 
-    private final BlogService blogService;
-
-    public BlogController(BlogService blogService) {
-        this.blogService = blogService;
-    }
+    @Autowired
+    private BlogService blogService;
 
     @GetMapping
     public ResponseEntity<List<BlogDTO>> getAllBlogs() {
@@ -32,6 +34,7 @@ public class BlogController {
 
     @PostMapping
     public ResponseEntity<BlogDTO> createBlog(
+            @Valid
             @RequestBody BlogDTO blogDto,
             @AuthenticationPrincipal UserDetails userDetails) {
 
