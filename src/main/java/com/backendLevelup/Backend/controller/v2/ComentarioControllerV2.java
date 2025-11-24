@@ -1,11 +1,13 @@
 package com.backendLevelup.Backend.controller.v2;
 
+import com.backendLevelup.Backend.assemblers.ComentarioAssembler;
 import com.backendLevelup.Backend.dtos.Comentario.ComentarioDTO;
 import com.backendLevelup.Backend.service.ComentarioServices.ComentarioService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -23,11 +25,12 @@ import java.util.stream.Collectors;
 @Tag(name = "Comentarios (v2)", description = "Controlador de comentarios versión 2")
 public class ComentarioControllerV2 {
 
-    private final ComentarioService comentarioService;
 
-    public ComentarioControllerV2(ComentarioService comentarioService) {
-        this.comentarioService = comentarioService;
-    }
+    @Autowired
+    private ComentarioService comentarioService;
+
+    @Autowired
+    private ComentarioAssembler comentarioAssembler;
 
     private EntityModel<ComentarioDTO> buildComentarioResource(Long productoId, ComentarioDTO comentario) {
         EntityModel<ComentarioDTO> resource = EntityModel.of(comentario);
