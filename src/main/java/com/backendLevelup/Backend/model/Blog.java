@@ -33,4 +33,36 @@ public class Blog {
     @Column(nullable = false)
     private LocalDateTime fechaPublicacion;
 
+    private Boolean enabled;
+
+    @Embedded
+    private Audit audit = new Audit();
+
+    @PrePersist
+    public void prePersist() {this.enabled = true;}
+
+    @Override
+    public String toString() {
+        return "Blog{" +
+                "id=" + id +
+                ", autor=" + autor +
+                ", titulo='" + titulo + '\'' +
+                ", contenido='" + contenido + '\'' +
+                ", fechaPublicacion=" + fechaPublicacion +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Blog blog = (Blog) o;
+        return id.equals(blog.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
 }

@@ -41,4 +41,34 @@ public class Carrito {
         item.setCarrito(null);
     }
 
+    private Boolean enabled;
+
+    @Embedded
+    private Audit audit = new Audit();
+
+    @PrePersist
+    public void prePersist() {this.enabled = true;}
+
+    @Override
+    public String toString() {
+        return "Carrito{" +
+                "id=" + id +
+                ", usuario=" + usuario +
+                ", items=" + items +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Carrito carrito = (Carrito) o;
+        return id.equals(carrito.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
 }

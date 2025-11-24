@@ -2,8 +2,10 @@ package com.backendLevelup.Backend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @ToString
@@ -38,5 +40,24 @@ public class Producto {
 
     @Column(name = "imagen_url")
     private String imagenUrl;
+
+    private Boolean enabled;
+
+    @Embedded
+    private Audit audit = new Audit();
+
+    @PrePersist
+    public void prePersist() {this.enabled = true;}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Producto producto = (Producto) o;
+        return Objects.equals(id, producto.id) && Objects.equals(nombre, producto.nombre);
+    }
+
+    @Override
+    public int hashCode(){return Objects.hash(id, nombre);}
 
 }
