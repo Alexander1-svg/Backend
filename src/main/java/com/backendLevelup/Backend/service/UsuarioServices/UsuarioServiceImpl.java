@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService{
@@ -74,4 +75,11 @@ public class UsuarioServiceImpl implements UsuarioService{
 
         return usuarioAssembler.toDTO(usuario);
     }
+    @Override
+    public List<UsuarioDTO> findAll() {
+        return usuarioRepository.findAll().stream()
+                .map(usuarioAssembler::toDTO)
+                .toList();
+    }
+
 }

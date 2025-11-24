@@ -1,5 +1,6 @@
 package com.backendLevelup.Backend.controller.v2;
 
+import com.backendLevelup.Backend.assemblers.BlogAssembler;
 import com.backendLevelup.Backend.dtos.Blog.BlogDTO;
 import com.backendLevelup.Backend.service.BlogServices.BlogService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,20 +24,11 @@ import java.util.stream.Collectors;
 public class BlogControllerV2 {
 
     private final BlogService blogService;
+    private final BlogAssembler blogAssembler;
 
-    public BlogControllerV2(BlogService blogService) {
+    public BlogControllerV2(BlogService blogService, BlogAssembler blogAssembler) {
         this.blogService = blogService;
-    }
-
-    private EntityModel<BlogDTO> buildBlogResource(BlogDTO blog) {
-        EntityModel<BlogDTO> resource = EntityModel.of(blog);
-        resource.add(WebMvcLinkBuilder.linkTo(
-                WebMvcLinkBuilder.methodOn(BlogControllerV2.class).getBlogById(blog.getId())
-        ).withSelfRel());
-        resource.add(WebMvcLinkBuilder.linkTo(
-                WebMvcLinkBuilder.methodOn(BlogControllerV2.class).getAllBlogs()
-        ).withRel("all-blogs"));
-        return resource;
+        this.blogAssembler = blogAssembler;
     }
 
     @Operation(summary = "Obtener todos los blogs", description = "Devuelve la lista de todos los blogs")
@@ -48,12 +39,10 @@ public class BlogControllerV2 {
     @GetMapping
     public ResponseEntity<CollectionModel<EntityModel<BlogDTO>>> getAllBlogs() {
         List<EntityModel<BlogDTO>> blogs = blogService.getAllBlogs().stream()
-                .map(this::buildBlogResource)
+                .map(blogAssembler::toModel)
                 .collect(Collectors.toList());
 
         CollectionModel<EntityModel<BlogDTO>> collection = CollectionModel.of(blogs);
-        collection.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(BlogControllerV2.class).getAllBlogs())
-                .withSelfRel());
         return ResponseEntity.ok(collection);
     }
 
@@ -66,7 +55,7 @@ public class BlogControllerV2 {
     @GetMapping("/{blogId}")
     public ResponseEntity<EntityModel<BlogDTO>> getBlogById(@PathVariable Long blogId) {
         BlogDTO blog = blogService.getBlogById(blogId);
-        return ResponseEntity.ok(buildBlogResource(blog));
+        return ResponseEntity.ok(blogAssembler.toModel(blog));
     }
 
     @Operation(summary = "Crear nuevo blog", description = "Crea un blog usando la información del usuario autenticado")
@@ -82,7 +71,7 @@ public class BlogControllerV2 {
 
         String emailUsuario = userDetails.getUsername();
         BlogDTO nuevoPost = blogService.createBlog(blogDto, emailUsuario);
-        return new ResponseEntity<>(buildBlogResource(nuevoPost), HttpStatus.CREATED);
+        return new ResponseEntity<>(blogAssembler.toModel(nuevoPost), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Actualizar blog", description = "Actualiza un blog existente según su ID")
@@ -100,7 +89,7 @@ public class BlogControllerV2 {
 
         String emailUsuario = userDetails.getUsername();
         BlogDTO actualizado = blogService.updateBlog(blogId, blogDto, emailUsuario);
-        return ResponseEntity.ok(buildBlogResource(actualizado));
+        return ResponseEntity.ok(blogAssembler.toModel(actualizado));
     }
 
     @Operation(summary = "Eliminar blog", description = "Elimina un blog según su ID y usuario autenticado")
