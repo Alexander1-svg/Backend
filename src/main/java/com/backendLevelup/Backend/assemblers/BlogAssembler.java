@@ -1,8 +1,11 @@
 package com.backendLevelup.Backend.assemblers;
 
 
+import com.backendLevelup.Backend.controller.v2.BlogControllerV2;
 import com.backendLevelup.Backend.dtos.Blog.BlogDTO;
 import com.backendLevelup.Backend.model.Blog;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
@@ -34,5 +37,15 @@ public class BlogAssembler {
         entidad.setContenido(dto.getContenido());
 
         return entidad;
+    }
+    public EntityModel<BlogDTO> toModel(BlogDTO dto) {
+        EntityModel<BlogDTO> resource = EntityModel.of(dto);
+        resource.add(WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(BlogControllerV2.class).getBlogById(dto.getId())
+        ).withSelfRel());
+        resource.add(WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(BlogControllerV2.class).getAllBlogs()
+        ).withRel("all-blogs"));
+        return resource;
     }
 }

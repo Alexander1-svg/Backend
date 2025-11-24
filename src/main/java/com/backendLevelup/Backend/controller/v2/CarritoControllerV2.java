@@ -75,4 +75,28 @@ public class CarritoControllerV2 {
         resource.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CarritoControllerV2.class).getCarrito(userDetails)).withRel("self"));
         return ResponseEntity.ok(resource);
     }
+    @Operation(summary = "Actualizar cantidad de un item en el carrito", description = "Actualiza la cantidad de un producto en el carrito del usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cantidad actualizada correctamente"),
+            @ApiResponse(responseCode = "400", description = "Cantidad inválida"),
+            @ApiResponse(responseCode = "404", description = "Item no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error del servidor")
+    })
+    @PutMapping("/actualizar/{itemId}")
+    public ResponseEntity<EntityModel<CarritoDTO>> actualizarCantidad(
+            @PathVariable Long itemId,
+            @RequestParam int nuevaCantidad,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        String email = userDetails.getUsername();
+        CarritoDTO carritoActualizado = carritoService.actualizarCantidadItem(email, itemId, nuevaCantidad);
+
+        EntityModel<CarritoDTO> resource = EntityModel.of(carritoActualizado);
+        resource.add(WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(CarritoControllerV2.class).getCarrito(userDetails)
+        ).withRel("self"));
+
+        return ResponseEntity.ok(resource);
+    }
+
 }
