@@ -32,9 +32,9 @@ public class AuthController {
         return ResponseEntity.ok(usuarioCreado);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<UsuarioDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
-        UsuarioDTO usuarioLogeado = usuarioService.login(loginDTO);
-        return ResponseEntity.ok(usuarioLogeado);
-    }
+    //@PostMapping("/login")
+    //public ResponseEntity<UsuarioDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
+        //UsuarioDTO usuarioLogeado = usuarioService.login(loginDTO);
+        //return ResponseEntity.ok(usuarioLogeado);
+    //}
 }
