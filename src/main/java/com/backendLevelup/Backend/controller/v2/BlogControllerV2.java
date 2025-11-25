@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -22,14 +23,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v2/blog")
 @Tag(name = "Blog (v2)", description = "Controlador de blogs versión 2")
 public class BlogControllerV2 {
+    @Autowired
+    private BlogService blogService;
+    @Autowired
+    private BlogAssembler blogAssembler;
 
-    private final BlogService blogService;
-    private final BlogAssembler blogAssembler;
 
-    public BlogControllerV2(BlogService blogService, BlogAssembler blogAssembler) {
-        this.blogService = blogService;
-        this.blogAssembler = blogAssembler;
-    }
 
     @Operation(summary = "Obtener todos los blogs", description = "Devuelve la lista de todos los blogs")
     @ApiResponses(value = {

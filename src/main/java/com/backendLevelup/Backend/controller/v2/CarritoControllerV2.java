@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +20,10 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Carrito (v2)", description = "Controlador de carrito versión 2")
 public class CarritoControllerV2 {
 
-    private final CarritoService carritoService;
+    @Autowired
+    private CarritoService carritoService;
 
-    public CarritoControllerV2(CarritoService carritoService) {
-        this.carritoService = carritoService;
-    }
+
 
     @Operation(summary = "Obtener carrito del usuario", description = "Devuelve el carrito actual o lo crea si no existe")
     @ApiResponses(value = {

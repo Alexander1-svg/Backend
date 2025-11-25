@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -20,11 +21,8 @@ import java.util.stream.Collectors;
 @Tag(name = "Categorías (v2)", description = "Controlador de categorías versión 2")
 public class CategoriaControllerV2 {
 
-    private final CategoriaService categoriaService;
-
-    public CategoriaControllerV2(CategoriaService categoriaService) {
-        this.categoriaService = categoriaService;
-    }
+    @Autowired
+    private CategoriaService categoriaService;
 
     private EntityModel<CategoriaDTO> buildCategoriaResource(CategoriaDTO categoria) {
         EntityModel<CategoriaDTO> resource = EntityModel.of(categoria);

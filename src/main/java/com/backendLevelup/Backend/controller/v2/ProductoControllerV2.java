@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -20,12 +21,8 @@ import java.util.stream.Collectors;
 @RequestMapping("api/v2/productos")
 @Tag(name = "Productos (v2)", description = "Controlador de productos versión 2")
 public class ProductoControllerV2 {
-
-    private final ProductoService productoService;
-
-    public ProductoControllerV2(ProductoService productoService) {
-        this.productoService = productoService;
-    }
+    @Autowired
+    private ProductoService productoService;
 
     private EntityModel<ProductoDTO> buildProductoResource(ProductoDTO producto) {
         EntityModel<ProductoDTO> resource = EntityModel.of(producto);
