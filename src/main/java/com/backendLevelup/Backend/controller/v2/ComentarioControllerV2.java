@@ -29,9 +29,6 @@ public class ComentarioControllerV2 {
     @Autowired
     private ComentarioService comentarioService;
 
-    @Autowired
-    private ComentarioAssembler comentarioAssembler;
-
     private EntityModel<ComentarioDTO> buildComentarioResource(Long productoId, ComentarioDTO comentario) {
         EntityModel<ComentarioDTO> resource = EntityModel.of(comentario);
         resource.add(WebMvcLinkBuilder.linkTo(

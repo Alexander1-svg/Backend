@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -23,11 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Tag(name = "Auth (v2)", description = "Controller de autenticacion V2")
 public class AuthControllerV2 {
 
-    private final UsuarioService usuarioService;
-
-    public AuthControllerV2(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
-    }
+    @Autowired
+    private UsuarioService usuarioService;
 
     @Operation(summary = "Registrar usuario (v2)", description = "Registrar a un nuevo user")
     @ApiResponses(value = {
