@@ -62,6 +62,7 @@ public class SpringSecurityConfig {
                             // ZONA PRODUCTOS
                             .requestMatchers(HttpMethod.GET, "/api/v1/productos").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/productos", "/api/v1/productos/{id}").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/productos/categoria/**").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/productos", "api/v1/productos/categoria/{nombreCategoria}").permitAll()
 
                             // ZONA CATEGORIAS
