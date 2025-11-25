@@ -2,7 +2,6 @@ package com.backendLevelup.Backend.security;
 
 import com.backendLevelup.Backend.security.filter.JwtAuthenticationFilter;
 import com.backendLevelup.Backend.security.filter.JwtValidationFilter;
-import org.apache.catalina.filters.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -19,8 +18,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class SpringSecurityConfig {
@@ -94,7 +95,8 @@ public class SpringSecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOriginPatterns(List.of("*"));
+        //configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
@@ -106,10 +108,26 @@ public class SpringSecurityConfig {
 
     @Bean
     FilterRegistrationBean<CorsFilter> corsFilter() {
-        FilterRegistrationBean<CorsFilter> corsBean = new FilterRegistrationBean<>(
-                new CorsFilter()
-        );
-        corsBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return corsBean;
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        source.registerCorsConfiguration("/**", config);
+
+        // Usamos el CorsFilter de Spring Framework, pasándole la configuración
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
     }
+
+    //@Bean
+    //FilterRegistrationBean<CorsFilter> corsFilter() {
+        //FilterRegistrationBean<CorsFilter> corsBean = new FilterRegistrationBean<>(
+                //new CorsFilter()
+        //);
+        //corsBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        //corsBean;
+    //}
 }
