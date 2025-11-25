@@ -44,6 +44,8 @@ public class SpringSecurityConfig {
 
         return http.authorizeHttpRequests((authz) -> {
                     authz
+                            // Permitir preguntas previas (Preflight) sin login
+                            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                             // ZONA SWAGGER
                             .requestMatchers("/doc/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
