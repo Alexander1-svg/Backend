@@ -1,6 +1,7 @@
 package com.backendLevelup.Backend.exceptions;
 
 import com.backendLevelup.Backend.dtos.Error.ErrorDTO;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -41,5 +42,17 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(this.createErrorDTO(HttpStatus.BAD_REQUEST.value(), new Date(), errorMap));
+    }
+
+    // 4. Atrapa errores de validación de la Base de Datos (Entidades)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, String>> handleDatabaseValidation(ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getConstraintViolations().forEach(violation -> {
+            String campo = violation.getPropertyPath().toString();
+            String mensaje = violation.getMessage();
+            errors.put(campo, mensaje);
+        });
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 }
