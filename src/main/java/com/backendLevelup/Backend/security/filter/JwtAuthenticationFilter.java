@@ -83,9 +83,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         body.put("username", username);
 
         // Enviar respuesta
-        response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setStatus(200);
-        response.setContentType("application/json"); // Hardcodeado para asegurar que sea JSON
+        response.setContentType("application/json");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(body));
     }
 
     @Override
@@ -94,8 +94,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         body.put("message", "Error de autenticación: usuario o contraseña incorrectos");
         body.put("error", failed.getMessage());
 
-        response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setStatus(401); // 401 = No autorizado
         response.setContentType("application/json");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(body));
     }
 }

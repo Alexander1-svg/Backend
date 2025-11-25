@@ -40,7 +40,7 @@ public class SpringSecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        AuthenticationManager authenticationManager = authenticationManager(); // Obtener el manager
+        AuthenticationManager authenticationManager = authenticationManager();
 
         return http.authorizeHttpRequests((authz) -> {
                     authz

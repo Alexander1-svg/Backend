@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
 
 public class JwtValidationFilter extends BasicAuthenticationFilter {
 
@@ -50,13 +51,20 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
                     .getPayload();
 
             String username = claims.getSubject();
-            String authoritiesJson = claims.get(TokenJwtConfig.AUTHORITIES_KEY, String.class);
+            Object authoritiesClaims = claims.get("authorities");
 
-            Collection<? extends GrantedAuthority> authorities = Arrays.asList(
-                    new ObjectMapper()
-                            .addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityJsonCreator.class)
-                            .readValue(authoritiesJson, SimpleGrantedAuthority[].class)
-            );
+            Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
+
+            if (authoritiesClaims != null) {
+                String authoritiesJson = authoritiesClaims.toString();
+
+                // Usamos MixIn para deserializar correctamente
+                authorities = Arrays.asList(
+                        new ObjectMapper()
+                                .addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityJsonCreator.class)
+                                .readValue(authoritiesJson, SimpleGrantedAuthority[].class)
+                );
+            }
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     username, null, authorities
@@ -70,9 +78,9 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
             body.put("error", "Token JWT inválido o expirado");
             body.put("message", e.getMessage());
 
-            response.getWriter().write(new ObjectMapper().writeValueAsString(body));
             response.setStatus(403);
             response.setContentType(TokenJwtConfig.CONTENT_TYPE);
+            response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         }
     }
 }
