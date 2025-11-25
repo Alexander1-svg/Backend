@@ -3,7 +3,6 @@ package com.backendLevelup.Backend.security.filter;
 import com.backendLevelup.Backend.model.Usuario;
 import com.backendLevelup.Backend.security.TokenJwtConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,15 +14,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.backendLevelup.Backend.security.TokenJwtConfig.CONTENT_TYPE;
-
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -31,65 +26,76 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-        this.setFilterProcessesUrl("/api/login");
+        this.setFilterProcessesUrl("/api/login"); // Endpoint para loguearse
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
 
+        Usuario user = null;
+        String username = null;
+        String password = null;
+
         try {
-            Usuario user = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
-            String username = user.getNombre();
-            String password = user.getPassword();
-
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(username, password);
-
-            return authenticationManager.authenticate(authToken);
-
+            user = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
+            username = user.getNombre();
+            password = user.getPassword();
         } catch (IOException e) {
-            throw new RuntimeException("Error al leer las credenciales en el cuerpo de la petición", e);
+            throw new RuntimeException("Error al leer las credenciales", e);
         }
+
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(username, password);
+
+        return authenticationManager.authenticate(authToken);
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                            FilterChain chain, Authentication authResult) throws IOException {
+                                            FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
-        String username = authResult.getName();
+        // Obtener datos del usuario logueado
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authResult.getPrincipal();
+        String username = user.getUsername();
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
 
-        Claims claims = Jwts.claims().build();
-        claims.put(TokenJwtConfig.AUTHORITIES_KEY, new ObjectMapper().writeValueAsString(authorities));
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("authorities", new ObjectMapper().writeValueAsString(authorities));
+        claims.put("username", username); // Agregamos el username al payload del token
 
+        // Generar el Token
         String token = Jwts.builder()
-                .claims(claims)
+                .claims(claims) // Pasamos el mapa directamente
                 .subject(username)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 3600000))
                 .signWith(TokenJwtConfig.SECRET_KEY)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 3600000)) // 1 Hora
                 .compact();
 
+        // Agregar cabecera (Buena práctica)
         response.addHeader(TokenJwtConfig.HEADER_STRING, TokenJwtConfig.JWT_TOKEN_PREFIX + token);
 
+        // CONSTRUIR RESPUESTA JSON PARA REACT
         Map<String, Object> body = new HashMap<>();
         body.put("token", token);
+        body.put("message", "Login exitoso desde el Backend en AWS");
         body.put("username", username);
-        body.put("message", "¡Has iniciado sesión con éxito!");
 
+        // Enviar respuesta
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setStatus(200);
-        response.setContentType(CONTENT_TYPE);
+        response.setContentType("application/json"); // Hardcodeado para asegurar que sea JSON
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        Map<String, String> body = new HashMap<>();
-        body.put("message", "Authentication failed, password or username is invalid");
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Error de autenticación: usuario o contraseña incorrectos");
         body.put("error", failed.getMessage());
+
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType(CONTENT_TYPE);
+        response.setStatus(401); // 401 Unauthorized
+        response.setContentType("application/json");
     }
 }
