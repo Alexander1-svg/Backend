@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,6 +67,8 @@ public class UsuarioServiceImpl implements UsuarioService {
             esDuoc = true;
         }
 
+        List<Rol> roles = new ArrayList<>();
+
         // --- LÓGICA DE ROLES ACTUALIZADA ---
         Rol rolUser = rolRepository.findByNombre("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Error: Rol USER no encontrado"));
@@ -78,7 +81,8 @@ public class UsuarioServiceImpl implements UsuarioService {
         nuevoUsuario.setPassword(passwordEncript);
         nuevoUsuario.setFechaNacimiento(LocalDate.parse(dto.getFechaNacimiento()));
         nuevoUsuario.setTieneDescuentoDuoc(esDuoc);
-        nuevoUsuario.getRoles().add(rolUser);
+        nuevoUsuario.setEnabled(true);
+        nuevoUsuario.setRoles(roles);
 
         if (emailMin.endsWith("@levelup.cl")) {
             Rol rolAdmin = rolRepository.findByNombre("ROLE_ADMIN")
