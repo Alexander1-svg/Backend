@@ -44,25 +44,34 @@ public class SpringSecurityConfig {
 
         return http.authorizeHttpRequests((authz) -> {
                     authz
+                            // ZONA SWAGGER
+                            .requestMatchers("/doc/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+
+                            // ZONA AUTH
                             .requestMatchers(HttpMethod.GET, "/api/v1/auth").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/auth").hasRole("ADMIN")
 
+                            // ZONA PRODUCTOS
                             .requestMatchers(HttpMethod.GET, "/api/v1/productos").hasAnyRole("ADMIN", "USER")
                             .requestMatchers(HttpMethod.GET, "/api/v1/productos", "/api/v1/productos/{id}").hasAnyRole("ADMIN", "USER")
                             .requestMatchers(HttpMethod.POST, "/api/v1/productos", "api/v1/productos/categoria/{nombreCategoria}").hasAnyRole("ADMIN", "USER")
 
+                            // ZONA CATEGORIAS
                             .requestMatchers(HttpMethod.GET, "/api/v1/categorias").hasAnyRole("ADMIN", "USER")
                             .requestMatchers(HttpMethod.GET, "/api/v1/categorias/{id}").hasAnyRole("ADMIN", "USER")
                             .requestMatchers(HttpMethod.GET, "/api/v1/categorias/nombre/{nombreCategoria}").hasAnyRole("ADMIN", "USER")
 
+                            // ZONA COMENTARIOS
                             .requestMatchers(HttpMethod.GET, "/api/v1/productos/{productoId}/comentarios").hasAnyRole("ADMIN", "USER")
                             .requestMatchers(HttpMethod.POST, "/api/v1/productos/{productoId}/comentarios").hasAnyRole("ADMIN", "USER")
 
+                            // ZONA CARRITO
                             .requestMatchers(HttpMethod.GET, "/api/v1/carrito").hasAnyRole("ADMIN", "USER")
                             .requestMatchers(HttpMethod.POST, "/api/v1/carrito/agregar").hasAnyRole("ADMIN", "USER")
                             .requestMatchers(HttpMethod.DELETE, "/api/v1/carrito/remover/{itemId}").hasAnyRole("ADMIN", "USER")
 
+                            // ZONA BLOG
                             .requestMatchers(HttpMethod.GET, "/api/v1/blog").hasAnyRole("ADMIN", "USER")
                             .requestMatchers(HttpMethod.GET, "/api/v1/blog/{blogId}").hasAnyRole("ADMIN", "USER")
                             .requestMatchers(HttpMethod.POST, "/api/v1/blog").hasAnyRole("ADMIN", "USER")
