@@ -22,23 +22,25 @@ public class JpaUserDetailsService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    // Nota: El método se llama 'loadUserByUsername' por contrato de Spring
+    // pero el parámetro que recibe es el EMAIL
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        // 1. Buscar al usuario por nombre de usuario
-        Usuario user = usuarioRepository.findByNombre(username).orElseThrow(
-                () -> new UsernameNotFoundException(String.format("No user found with username '%s'", username))
+        // Buscar al usuario por EMAIL
+        Usuario user = usuarioRepository.findByEmail(email).orElseThrow(
+                () -> new UsernameNotFoundException(String.format("El correo %s no existe en el sistema", email))
         );
 
-        // 2. Mapear los roles a GrantedAuthority de Spring Security
+        // Mapear los roles a GrantedAuthority
         List<GrantedAuthority> grantedAuthorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getNombre()))
                 .collect(Collectors.toList());
 
         // 3. Devolver un objeto UserDetails de Spring Security
         return new org.springframework.security.core.userdetails.User(
-                user.getNombre(),
+                user.getEmail(),
                 user.getPassword(),
-                user.getEnabled(),
+                user.getEnabled() != null && user.getEnabled(),
                 true,
                 true,
                 true,

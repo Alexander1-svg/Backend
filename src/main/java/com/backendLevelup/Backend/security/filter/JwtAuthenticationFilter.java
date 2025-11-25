@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         try {
             user = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
-            username = user.getNombre();
+            username = user.getEmail();
             password = user.getPassword();
         } catch (IOException e) {
             throw new RuntimeException("Error al leer las credenciales", e);
