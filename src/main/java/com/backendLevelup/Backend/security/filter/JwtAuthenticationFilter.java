@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-        this.setFilterProcessesUrl("/api/login"); // Endpoint para loguearse
+        this.setFilterProcessesUrl("/api/v1/auth/login"); // Endpoint para loguearse
     }
 
     @Override
@@ -95,7 +95,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         body.put("error", failed.getMessage());
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
-        response.setStatus(401); // 401 Unauthorized
+        response.setStatus(401); // 401 = No autorizado
         response.setContentType("application/json");
     }
 }
