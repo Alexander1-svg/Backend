@@ -53,14 +53,14 @@ public class SpringSecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/api/v1/auth").hasRole("ADMIN")
 
                             // ZONA PRODUCTOS
-                            .requestMatchers(HttpMethod.GET, "/api/v1/productos").hasAnyRole("ADMIN", "USER")
-                            .requestMatchers(HttpMethod.GET, "/api/v1/productos", "/api/v1/productos/{id}").hasAnyRole("ADMIN", "USER")
-                            .requestMatchers(HttpMethod.POST, "/api/v1/productos", "api/v1/productos/categoria/{nombreCategoria}").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.GET, "/api/v1/productos").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/productos", "/api/v1/productos/{id}").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/productos", "api/v1/productos/categoria/{nombreCategoria}").permitAll()
 
                             // ZONA CATEGORIAS
-                            .requestMatchers(HttpMethod.GET, "/api/v1/categorias").hasAnyRole("ADMIN", "USER")
-                            .requestMatchers(HttpMethod.GET, "/api/v1/categorias/{id}").hasAnyRole("ADMIN", "USER")
-                            .requestMatchers(HttpMethod.GET, "/api/v1/categorias/nombre/{nombreCategoria}").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.GET, "/api/v1/categorias").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/categorias/{id}").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/categorias/nombre/{nombreCategoria}").permitAll()
 
                             // ZONA COMENTARIOS
                             .requestMatchers(HttpMethod.GET, "/api/v1/productos/{productoId}/comentarios").hasAnyRole("ADMIN", "USER")
