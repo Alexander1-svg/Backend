@@ -15,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/productos/{productoId}/comentarios")
-@CrossOrigin(origins = "http://localhost:5173", originPatterns = "*")
 @Validated
 public class ComentarioController {
 

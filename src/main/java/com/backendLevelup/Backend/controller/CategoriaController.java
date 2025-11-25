@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/categorias")
-@CrossOrigin(origins = "http://localhost:5173", originPatterns = "*")
 @Validated
 public class CategoriaController {
 
