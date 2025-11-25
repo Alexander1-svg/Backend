@@ -44,11 +44,30 @@ public class SpringSecurityConfig {
 
         return http.authorizeHttpRequests((authz) -> {
                     authz
-                            .requestMatchers(HttpMethod.GET, "/api/v1/usuarios").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/api/v1/usuarios/register").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/auth").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/auth").hasRole("ADMIN")
 
-                            .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").hasRole("ADMIN")
-                            .requestMatchers(HttpMethod.GET, "/api/v1/products", "/api/v1/products/{id}").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.GET, "/api/v1/productos").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.GET, "/api/v1/productos", "/api/v1/productos/{id}").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.POST, "/api/v1/productos", "api/v1/productos/categoria/{nombreCategoria}").hasAnyRole("ADMIN", "USER")
+
+                            .requestMatchers(HttpMethod.GET, "/api/v1/categorias").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.GET, "/api/v1/categorias/{id}").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.GET, "/api/v1/categorias/nombre/{nombreCategoria}").hasAnyRole("ADMIN", "USER")
+
+                            .requestMatchers(HttpMethod.GET, "/api/v1/productos/{productoId}/comentarios").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.POST, "/api/v1/productos/{productoId}/comentarios").hasAnyRole("ADMIN", "USER")
+
+                            .requestMatchers(HttpMethod.GET, "/api/v1/carrito").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.POST, "/api/v1/carrito/agregar").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.DELETE, "/api/v1/carrito/remover/{itemId}").hasAnyRole("ADMIN", "USER")
+
+                            .requestMatchers(HttpMethod.GET, "/api/v1/blog").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.GET, "/api/v1/blog/{blogId}").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.POST, "/api/v1/blog").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.PUT, "/api/v1/blog/{blogId}").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.DELETE, "/api/v1/blog/{blogId}").hasAnyRole("ADMIN", "USER")
 
                             .anyRequest().authenticated();
                 })
