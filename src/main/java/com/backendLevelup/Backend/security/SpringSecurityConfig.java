@@ -47,6 +47,10 @@ public class SpringSecurityConfig {
                     authz
                             // Permitir preguntas previas (Preflight) sin login
                             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                            // PERMITIR ERRORES (Vital para ver qué pasó en el registro)
+                            .requestMatchers("/error").permitAll()
+
                             // ZONA SWAGGER
                             .requestMatchers("/doc/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
