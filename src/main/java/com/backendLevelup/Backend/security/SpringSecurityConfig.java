@@ -82,7 +82,7 @@ public class SpringSecurityConfig {
                             // ZONA BLOG
                             .requestMatchers(HttpMethod.GET, "/api/v1/blog").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/blog/{blogId}").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/api/v1/blog").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/blog").hasAnyRole("ADMIN", "USER")
                             .requestMatchers(HttpMethod.PUT, "/api/v1/blog/{blogId}").hasAnyRole("ADMIN", "USER")
                             .requestMatchers(HttpMethod.DELETE, "/api/v1/blog/{blogId}").hasAnyRole("ADMIN", "USER")
 

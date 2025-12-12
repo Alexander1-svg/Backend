@@ -15,10 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -61,7 +58,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("authorities", new ObjectMapper().writeValueAsString(authorities));
+        List<String> roles = authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+
+        claims.put("authorities", roles);
         claims.put("username", username); // Agregamos el username al payload del token
 
         // Generar el Token

@@ -38,14 +38,14 @@ public class UsuarioServiceImpl implements UsuarioService {
         this.usuarioAssembler = usuarioAssembler;
     }
 
+    // Mostrar ususarios
     @Override
-    @Transactional(readOnly = true)
     public List<UsuarioDTO> findAll() {
-        List<Usuario> usuarios = (List<Usuario>) usuarioRepository.findAll();
-        return usuarios.stream()
+        return usuarioRepository.findAll().stream()
                 .map(usuarioAssembler::toDTO)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     @Transactional
