@@ -71,18 +71,18 @@ public class SpringSecurityConfig {
                             .requestMatchers(HttpMethod.GET, "/api/v1/categorias/nombre/{nombreCategoria}").permitAll()
 
                             // ZONA COMENTARIOS
-                            .requestMatchers(HttpMethod.GET, "/api/v1/productos/{productoId}/comentarios").hasAnyRole("ADMIN", "USER")
-                            .requestMatchers(HttpMethod.POST, "/api/v1/productos/{productoId}/comentarios").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.GET, "/api/v1/productos/{productoId}/comentarios").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/productos/{productoId}/comentarios").permitAll()
 
                             // ZONA CARRITO
-                            .requestMatchers(HttpMethod.GET, "/api/v1/carrito").hasAnyRole("ADMIN", "USER")
-                            .requestMatchers(HttpMethod.POST, "/api/v1/carrito/agregar").hasAnyRole("ADMIN", "USER")
-                            .requestMatchers(HttpMethod.DELETE, "/api/v1/carrito/remover/{itemId}").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.GET, "/api/v1/carrito").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/carrito/agregar").permitAll()
+                            .requestMatchers(HttpMethod.DELETE, "/api/v1/carrito/remover/{itemId}").permitAll()
 
                             // ZONA BLOG
-                            .requestMatchers(HttpMethod.GET, "/api/v1/blog").hasAnyRole("ADMIN", "USER")
-                            .requestMatchers(HttpMethod.GET, "/api/v1/blog/{blogId}").hasAnyRole("ADMIN", "USER")
-                            .requestMatchers(HttpMethod.POST, "/api/v1/blog").hasAnyRole("ADMIN", "USER")
+                            .requestMatchers(HttpMethod.GET, "/api/v1/blog").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/blog/{blogId}").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/blog").permitAll()
                             .requestMatchers(HttpMethod.PUT, "/api/v1/blog/{blogId}").hasAnyRole("ADMIN", "USER")
                             .requestMatchers(HttpMethod.DELETE, "/api/v1/blog/{blogId}").hasAnyRole("ADMIN", "USER")
 
