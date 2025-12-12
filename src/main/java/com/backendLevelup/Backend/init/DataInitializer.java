@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 @Component
@@ -45,30 +46,35 @@ public class DataInitializer implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
 
-        // 1. Crear Roles si no existen
-        if (rolRepository.count() == 0) {
-            log.info("Creando Roles iniciales...");
-            rolRepository.save(new Rol(null, "ROLE_ADMIN"));
-            rolRepository.save(new Rol(null, "ROLE_USER"));
+        // Verificamos uno por uno. Si falta alguno, lo crea.
+        if (rolRepository.findByNombre("ROLE_USER").isEmpty()) {
+            rolRepository.save(new Rol("ROLE_USER"));
+            log.info("Rol ROLE_USER creado exitosamente.");
+        }
+
+        if (rolRepository.findByNombre("ROLE_ADMIN").isEmpty()) {
+            rolRepository.save(new Rol("ROLE_ADMIN"));
+            log.info("Rol ROLE_ADMIN creado exitosamente.");
         }
 
         if (usuarioRepository.count() == 0) {
             log.info("Creando usuario administrador inicial...");
 
-            // Buscamos el rol correctamente (findByName)
             Rol rolAdmin = rolRepository.findByNombre("ROLE_ADMIN")
                     .orElseThrow(() -> new RuntimeException("Error: Rol ADMIN no encontrado"));
 
-            // Usamos el constructor vacío y setters para evitar errores
             Usuario admin = new Usuario();
             admin.setNombre("Admin LevelUp");
             admin.setEmail("admin@levelup.com");
-            admin.setPassword(passwordEncoder.encode("admin123")); // Contraseña segura
-            admin.setFechaNacimiento(LocalDate.of(1990, 1, 1)); // ¡OBLIGATORIO!
+            admin.setPassword(passwordEncoder.encode("admin123"));
+            admin.setFechaNacimiento(LocalDate.of(1990, 1, 1));
             admin.setTieneDescuentoDuoc(true);
-            admin.setEnabled(true); // Aseguramos que esté activo
+            admin.setEnabled(true);
 
-            // Asignamos el rol a la lista
+            // Inicializamos la lista de roles si es nula (buena práctica)
+            if (admin.getRoles() == null) {
+                admin.setRoles(new ArrayList<>());
+            }
             admin.getRoles().add(rolAdmin);
 
             usuarioRepository.save(admin);

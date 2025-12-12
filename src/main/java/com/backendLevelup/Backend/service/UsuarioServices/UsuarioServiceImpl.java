@@ -10,6 +10,7 @@ import com.backendLevelup.Backend.model.Rol; // <--- Importante
 import com.backendLevelup.Backend.model.Usuario;
 import com.backendLevelup.Backend.repository.RolRepository; // <--- Importante
 import com.backendLevelup.Backend.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +24,13 @@ import java.util.stream.Collectors;
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
+    @Autowired
     private final UsuarioRepository usuarioRepository;
-    private final RolRepository rolRepository; // <--- AGREGADO: Necesario para buscar roles
+    @Autowired
+    private final RolRepository rolRepository;
+    @Autowired
     private final PasswordEncoder passwordEncoder;
+    @Autowired
     private final UsuarioAssembler usuarioAssembler;
 
     public UsuarioServiceImpl(UsuarioRepository usuarioRepository,
@@ -55,7 +60,7 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new UsuarioValidationException("Email existente");
         }
 
-        // CORRECCIÓN BUG EDAD: Lo sacamos del else-if para que valide SIEMPRE
+        // Validacion edad
         if (Period.between(LocalDate.parse(dto.getFechaNacimiento()), LocalDate.now()).getYears() < 18) {
             throw new UsuarioValidationException("Debe ser mayor de edad para registrarse");
         }
@@ -67,12 +72,23 @@ public class UsuarioServiceImpl implements UsuarioService {
             esDuoc = true;
         }
 
+        // lista de roles
         List<Rol> roles = new ArrayList<>();
 
-        // --- LÓGICA DE ROLES ACTUALIZADA ---
+        // Busca el rol USER
         Rol rolUser = rolRepository.findByNombre("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("Error: Rol USER no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Error: Rol 'ROLE_USER' no encontrado en la Base de Datos."));
 
+        roles.add(rolUser);
+
+        // Lógica para Admin (si el correo es de la empresa)
+        if (emailMin.endsWith("@levelup.cl")) {
+            Rol rolAdmin = rolRepository.findByNombre("ROLE_ADMIN")
+                    .orElseThrow(() -> new RuntimeException("Error: Rol 'ROLE_ADMIN' no encontrado en la Base de Datos."));
+            roles.add(rolAdmin);
+        }
+
+        // Crear el objeto Usuario
         String passwordEncript = passwordEncoder.encode(dto.getPassword());
 
         Usuario nuevoUsuario = new Usuario();
@@ -82,13 +98,9 @@ public class UsuarioServiceImpl implements UsuarioService {
         nuevoUsuario.setFechaNacimiento(LocalDate.parse(dto.getFechaNacimiento()));
         nuevoUsuario.setTieneDescuentoDuoc(esDuoc);
         nuevoUsuario.setEnabled(true);
-        nuevoUsuario.setRoles(roles);
 
-        if (emailMin.endsWith("@levelup.cl")) {
-            Rol rolAdmin = rolRepository.findByNombre("ROLE_ADMIN")
-                    .orElseThrow(() -> new RuntimeException("Error: Rol ADMIN no encontrado"));
-            nuevoUsuario.getRoles().add(rolAdmin);
-        }
+        // Asigna la lista que contiene los roles
+        nuevoUsuario.setRoles(roles);
 
         Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);
 
