@@ -53,8 +53,8 @@ public class Carrito {
     public String toString() {
         return "Carrito{" +
                 "id=" + id +
-                ", usuario=" + usuario +
-                ", items=" + items +
+                ", usuarioId=" + (usuario != null ? usuario.getId() : "null") +
+                ", cantidadItems=" + (items != null ? items.size() : 0) +
                 '}';
     }
 

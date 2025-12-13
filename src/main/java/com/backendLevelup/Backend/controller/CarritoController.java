@@ -6,7 +6,6 @@ import com.backendLevelup.Backend.service.CarritoServices.CarritoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,30 +17,42 @@ public class CarritoController {
     @Autowired
     private CarritoService carritoService;
 
+    // Obtener Carrito
     @GetMapping
-    public ResponseEntity<CarritoDTO> getCarrito(@AuthenticationPrincipal UserDetails userDetails) {
-        String email = userDetails.getUsername();
-        CarritoDTO carrito = carritoService.getOrCreateCarrito(email);
+    public ResponseEntity<CarritoDTO> getCarrito(
+            @AuthenticationPrincipal String emailUsuario) {
+
+        CarritoDTO carrito = carritoService.getOrCreateCarrito(emailUsuario);
         return ResponseEntity.ok(carrito);
     }
 
+    // Agregar Item
     @PostMapping("/agregar")
     public ResponseEntity<CarritoDTO> agregarItem(
             @RequestBody CarritoItemDetalleDTO itemDto,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal String emailUsuario) {
 
-        String email = userDetails.getUsername();
-        CarritoDTO carritoActualizado = carritoService.agregarProductoAlCarrito(email, itemDto);
+        CarritoDTO carritoActualizado = carritoService.agregarProductoAlCarrito(emailUsuario, itemDto);
         return ResponseEntity.ok(carritoActualizado);
     }
 
+    // Remover Item
     @DeleteMapping("/remover/{itemId}")
     public ResponseEntity<CarritoDTO> removerItem(
             @PathVariable Long itemId,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal String emailUsuario) {
+        CarritoDTO carritoActualizado = carritoService.removerProductoDelCarrito(emailUsuario, itemId);
+        return ResponseEntity.ok(carritoActualizado);
+    }
 
-        String email = userDetails.getUsername();
-        CarritoDTO carritoActualizado = carritoService.removerProductoDelCarrito(email, itemId);
+    // Actualizar Cantidad
+    @PutMapping("/item/{itemId}")
+    public ResponseEntity<CarritoDTO> actualizarCantidad(
+            @PathVariable Long itemId,
+            @RequestParam int cantidad,
+            @AuthenticationPrincipal String emailUsuario) {
+
+        CarritoDTO carritoActualizado = carritoService.actualizarCantidadItem(emailUsuario, itemId, cantidad);
         return ResponseEntity.ok(carritoActualizado);
     }
 }

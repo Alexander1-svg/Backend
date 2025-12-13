@@ -84,9 +84,10 @@ public class CarritoServicelmpl implements CarritoService {
             itemRepository.save(existingItem);
         } else {
             CarritoItem newItem = new CarritoItem();
-            newItem.setCarrito(carrito);
             newItem.setProducto(producto);
             newItem.setCantidad(itemDto.getCantidad());
+
+            carrito.addItem(newItem);
 
             itemRepository.save(newItem);
         }
@@ -106,9 +107,11 @@ public class CarritoServicelmpl implements CarritoService {
             throw new SecurityException("El ítem no pertenece al carrito del usuario.");
         }
 
-        itemRepository.delete(itemToRemove);
+        carrito.removeItem(itemToRemove);
 
-        return carritoAssembler.toDTO(carrito);
+        Carrito carritoActualizado = carritoRepository.save(carrito);
+
+        return carritoAssembler.toDTO(carritoActualizado);
     }
 
     @Override
@@ -128,6 +131,7 @@ public class CarritoServicelmpl implements CarritoService {
         }
 
         itemToUpdate.setCantidad(nuevaCantidad);
+
         itemRepository.save(itemToUpdate);
 
         return carritoAssembler.toDTO(carrito);
