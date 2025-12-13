@@ -87,7 +87,8 @@ public class CarritoServicelmpl implements CarritoService {
             newItem.setCarrito(carrito);
             newItem.setProducto(producto);
             newItem.setCantidad(itemDto.getCantidad());
-            carrito.getItems().add(newItem);
+
+            itemRepository.save(newItem);
         }
 
         return carritoAssembler.toDTO(carrito);
