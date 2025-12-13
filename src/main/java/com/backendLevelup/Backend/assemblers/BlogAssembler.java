@@ -1,7 +1,7 @@
 package com.backendLevelup.Backend.assemblers;
 
 
-import com.backendLevelup.Backend.controller.v2.BlogControllerV2;
+import com.backendLevelup.Backend.controller.BlogController;
 import com.backendLevelup.Backend.dtos.Blog.BlogDTO;
 import com.backendLevelup.Backend.model.Blog;
 import org.springframework.hateoas.EntityModel;
@@ -20,31 +20,33 @@ public class BlogAssembler {
         dto.setId(entidad.getId());
         dto.setTitulo(entidad.getTitulo());
         dto.setContenido(entidad.getContenido());
+        dto.setEnabled(entidad.getEnabled());
+        dto.setFechaPublicacion(entidad.getFechaPublicacion());
 
         if (entidad.getAutor() != null) {
             dto.setAutor(entidad.getAutor().getNombre());
         }
 
-        if (entidad.getFechaPublicacion() != null) {
-            dto.setFechaPublicacion(entidad.getFechaPublicacion().format(FORMATTER));
-        }
         return dto;
     }
 
     public Blog toEntity(BlogDTO dto) {
+        if (dto == null) return null;
+
         Blog entidad = new Blog();
         entidad.setTitulo(dto.getTitulo());
         entidad.setContenido(dto.getContenido());
 
         return entidad;
     }
+
     public EntityModel<BlogDTO> toModel(BlogDTO dto) {
         EntityModel<BlogDTO> resource = EntityModel.of(dto);
         resource.add(WebMvcLinkBuilder.linkTo(
-                WebMvcLinkBuilder.methodOn(BlogControllerV2.class).getBlogById(dto.getId())
+                WebMvcLinkBuilder.methodOn(BlogController.class).getBlogById(dto.getId())
         ).withSelfRel());
         resource.add(WebMvcLinkBuilder.linkTo(
-                WebMvcLinkBuilder.methodOn(BlogControllerV2.class).getAllBlogs()
+                WebMvcLinkBuilder.methodOn(BlogController.class).getAllBlogs()
         ).withRel("all-blogs"));
         return resource;
     }

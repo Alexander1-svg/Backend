@@ -35,9 +35,7 @@ public class BlogController {
     public ResponseEntity<BlogDTO> createBlog(
             @Valid
             @RequestBody BlogDTO blogDto,
-            @AuthenticationPrincipal UserDetails userDetails) {
-
-        String emailUsuario = userDetails.getUsername();
+            @AuthenticationPrincipal String emailUsuario) {
 
         BlogDTO nuevoPost = blogService.createBlog(blogDto, emailUsuario);
 
@@ -48,9 +46,7 @@ public class BlogController {
     public ResponseEntity<BlogDTO> updateBlog(
             @PathVariable Long blogId,
             @RequestBody BlogDTO blogDto,
-            @AuthenticationPrincipal UserDetails userDetails) {
-
-        String emailUsuario = userDetails.getUsername();
+            @AuthenticationPrincipal String emailUsuario) {
 
         BlogDTO actualizado = blogService.updateBlog(blogId, blogDto, emailUsuario);
 
@@ -60,9 +56,7 @@ public class BlogController {
     @DeleteMapping("/{blogId}")
     public ResponseEntity<Void> deleteBlog(
             @PathVariable Long blogId,
-            @AuthenticationPrincipal UserDetails userDetails) {
-
-        String emailUsuario = userDetails.getUsername();
+            @AuthenticationPrincipal String emailUsuario) {
 
         blogService.deleteBlog(blogId, emailUsuario);
 

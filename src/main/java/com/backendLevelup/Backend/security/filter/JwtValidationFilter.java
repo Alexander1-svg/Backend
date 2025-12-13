@@ -18,11 +18,7 @@ import io.jsonwebtoken.JwtException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ArrayList;
+import java.util.*;
 
 public class JwtValidationFilter extends BasicAuthenticationFilter {
 
@@ -53,17 +49,17 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
             String username = claims.getSubject();
             Object authoritiesClaims = claims.get("authorities");
 
-            Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
+            Collection<GrantedAuthority> authorities = new ArrayList<>();
 
             if (authoritiesClaims != null) {
-                String authoritiesJson = authoritiesClaims.toString();
-
-                // Usamos MixIn para deserializar correctamente
-                authorities = Arrays.asList(
-                        new ObjectMapper()
-                                .addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityJsonCreator.class)
-                                .readValue(authoritiesJson, SimpleGrantedAuthority[].class)
-                );
+                if (authoritiesClaims instanceof List<?>) {
+                    for (Object role : (List<?>) authoritiesClaims) {
+                        authorities.add(new SimpleGrantedAuthority((String) role));
+                    }
+                }
+                else if (authoritiesClaims instanceof String) {
+                    authorities.add(new SimpleGrantedAuthority((String) authoritiesClaims));
+                }
             }
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

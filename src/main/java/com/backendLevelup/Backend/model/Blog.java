@@ -39,13 +39,18 @@ public class Blog {
     private Audit audit = new Audit();
 
     @PrePersist
-    public void prePersist() {this.enabled = true;}
+    public void prePersist() {
+        this.enabled = true;
+        // Si no envían fecha de publicación, se pone la actual por defecto
+        if (this.fechaPublicacion == null) {
+            this.fechaPublicacion = LocalDateTime.now();
+        }
+    }
 
     @Override
     public String toString() {
         return "Blog{" +
-                "id=" + id +
-                ", autor=" + autor +
+                ", autorId=" + (autor != null ? autor.getId() : "null") +
                 ", titulo='" + titulo + '\'' +
                 ", contenido='" + contenido + '\'' +
                 ", fechaPublicacion=" + fechaPublicacion +

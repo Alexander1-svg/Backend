@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class BlogServicelpml implements BlogService{
+public class BlogServicelmpl implements BlogService{
 
     private final BlogRepository blogRepository;
     private final BlogAssembler blogAssembler;
     private final UsuarioRepository usuarioRepository;
 
-    public BlogServicelpml(BlogRepository blogRepository, BlogAssembler blogAssembler, UsuarioRepository usuarioRepository) {
+    public BlogServicelmpl(BlogRepository blogRepository, BlogAssembler blogAssembler, UsuarioRepository usuarioRepository) {
         this.blogRepository = blogRepository;
         this.blogAssembler = blogAssembler;
         this.usuarioRepository = usuarioRepository;
@@ -51,7 +51,12 @@ public class BlogServicelpml implements BlogService{
 
         Blog newPost = blogAssembler.toEntity(blogDto);
         newPost.setAutor(autor);
-        newPost.setFechaPublicacion(LocalDateTime.now());
+        // Asignamos fecha si no viene definida
+        if(newPost.getFechaPublicacion() == null) {
+            newPost.setFechaPublicacion(LocalDateTime.now());
+        }
+        // Habilitamos por defecto
+        newPost.setEnabled(true);
 
         Blog savedPost = blogRepository.save(newPost);
         return blogAssembler.toDTO(savedPost);
