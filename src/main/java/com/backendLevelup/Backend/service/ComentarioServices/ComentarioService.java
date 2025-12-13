@@ -8,5 +8,7 @@ public interface ComentarioService {
 
     List<ComentarioDTO> getComentariosByProducto(Long productoId);
 
-    ComentarioDTO guardarComentario(Long productoId, ComentarioDTO nuevoComentarioDto, String username);
+    ComentarioDTO guardarComentario(Long productoId, ComentarioDTO nuevoComentarioDto, String email);
+
+    void borrarComentario(Long comentarioId, String emailUsuario);
 }

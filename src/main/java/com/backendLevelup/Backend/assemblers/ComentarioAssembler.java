@@ -17,12 +17,19 @@ public class ComentarioAssembler {
         dto.setId(entidad.getId());
         dto.setComentario(entidad.getComentario());
 
+        // --- MEJORAS VISUALES Y DE PRIVACIDAD ---
         if (entidad.getUsuario() != null) {
-            dto.setNombreUsuario(entidad.getUsuario().getEmail());
+            // 1. Usamos el NOMBRE, no el email (Privacidad)
+            dto.setNombreUsuario(entidad.getUsuario().getNombre());
         }
 
         if (entidad.getProducto() != null) {
             dto.setProductoId(entidad.getProducto().getId());
+        }
+
+        // 3. Agregamos la fecha de creación (desde Audit)
+        if (entidad.getAudit() != null) {
+            dto.setFechaCreacion(entidad.getAudit().getCreatedAt());
         }
 
         return dto;
@@ -34,8 +41,8 @@ public class ComentarioAssembler {
         }
 
         Comentario entidad = new Comentario();
-
         entidad.setComentario(dto.getComentario());
+        // El usuario y producto se setean en el Service, así que esto está bien.
 
         return entidad;
     }
