@@ -63,27 +63,24 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .toList();
 
         claims.put("authorities", roles);
-        claims.put("username", username); // Agregamos el username al payload del token
+        claims.put("user", user);
 
         // Generar el Token
         String token = Jwts.builder()
-                .claims(claims) // Pasamos el mapa directamente
+                .claims(claims)
                 .subject(username)
                 .signWith(TokenJwtConfig.SECRET_KEY)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 3600000)) // 1 Hora
                 .compact();
 
-        // Agregar cabecera (Buena práctica)
         response.addHeader(TokenJwtConfig.HEADER_STRING, TokenJwtConfig.JWT_TOKEN_PREFIX + token);
 
-        // CONSTRUIR RESPUESTA JSON PARA REACT
         Map<String, Object> body = new HashMap<>();
         body.put("token", token);
         body.put("message", "Login exitoso desde el Backend en AWS");
-        body.put("username", username);
+        body.put("email", username);
 
-        // Enviar respuesta
         response.setStatus(200);
         response.setContentType("application/json");
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));

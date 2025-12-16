@@ -71,7 +71,6 @@ public class DataInitializer implements CommandLineRunner {
             admin.setTieneDescuentoDuoc(true);
             admin.setEnabled(true);
 
-            // Inicializamos la lista de roles si es nula (buena práctica)
             if (admin.getRoles() == null) {
                 admin.setRoles(new ArrayList<>());
             }
