@@ -26,9 +26,9 @@ public class BlogController {
         return ResponseEntity.ok(blogService.getAllBlogs());
     }
 
-    @GetMapping("/{blogId}")
-    public ResponseEntity<BlogDTO> getBlogById(@PathVariable Long blogId) {
-        return ResponseEntity.ok(blogService.getBlogById(blogId));
+    @GetMapping("/{id}")
+    public ResponseEntity<BlogDTO> getBlogById(@PathVariable Long id) {
+        return ResponseEntity.ok(blogService.getBlogById(id));
     }
 
     @PostMapping
@@ -42,23 +42,23 @@ public class BlogController {
         return new ResponseEntity<>(nuevoPost, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{blogId}")
+    @PutMapping("/{idd}")
     public ResponseEntity<BlogDTO> updateBlog(
-            @PathVariable Long blogId,
+            @PathVariable Long id,
             @RequestBody BlogDTO blogDto,
             @AuthenticationPrincipal String emailUsuario) {
 
-        BlogDTO actualizado = blogService.updateBlog(blogId, blogDto, emailUsuario);
+        BlogDTO actualizado = blogService.updateBlog(id, blogDto, emailUsuario);
 
         return ResponseEntity.ok(actualizado);
     }
 
-    @DeleteMapping("/{blogId}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBlog(
-            @PathVariable Long blogId,
+            @PathVariable Long id,
             @AuthenticationPrincipal String emailUsuario) {
 
-        blogService.deleteBlog(blogId, emailUsuario);
+        blogService.deleteBlog(id, emailUsuario);
 
         return ResponseEntity.noContent().build();
     }
