@@ -75,9 +75,9 @@ public class SpringSecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/api/v1/productos/{productoId}/comentarios").permitAll()
 
                             // ZONA CARRITO
-                            .requestMatchers(HttpMethod.GET, "/api/v1/carrito").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/api/v1/carrito/agregar").permitAll()
-                            .requestMatchers(HttpMethod.DELETE, "/api/v1/carrito/remover/{itemId}").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/carrito").authenticated()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/carrito/agregar").authenticated()
+                            .requestMatchers(HttpMethod.DELETE, "/api/v1/carrito/remover/{itemId}").authenticated()
 
                             // ZONA BLOG
                             .requestMatchers(HttpMethod.GET, "/api/v1/blog").permitAll()

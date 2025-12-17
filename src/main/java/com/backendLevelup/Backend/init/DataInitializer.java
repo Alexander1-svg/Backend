@@ -65,7 +65,7 @@ public class DataInitializer implements CommandLineRunner {
 
             Usuario admin = new Usuario();
             admin.setNombre("Admin LevelUp");
-            admin.setEmail("admin@levelup.com");
+            admin.setEmail("admin@levelup.cl");
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setFechaNacimiento(LocalDate.of(1990, 1, 1));
             admin.setTieneDescuentoDuoc(true);
