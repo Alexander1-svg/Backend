@@ -53,8 +53,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
         // Obtener datos del usuario logueado
-        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authResult.getPrincipal();
-        String username = user.getUsername();
+        String username = ((org.springframework.security.core.userdetails.UserDetails) authResult.getPrincipal()).getUsername();
+        String nombre = "";
+
+        if (authResult.getPrincipal() instanceof Usuario) {
+            Usuario usuarioReal = (Usuario) authResult.getPrincipal();
+            nombre = usuarioReal.getNombre();
+        } else {
+            nombre = username; // Fallback
+        }
+
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
 
         Map<String, Object> claims = new HashMap<>();
@@ -63,7 +71,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .toList();
 
         claims.put("authorities", roles);
-        claims.put("user", user);
+        claims.put("nombre", nombre);
+        claims.put("username", username);
 
         // Generar el Token
         String token = Jwts.builder()
@@ -80,6 +89,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         body.put("token", token);
         body.put("message", "Login exitoso desde el Backend en AWS");
         body.put("email", username);
+        body.put("nombre", nombre);
 
         response.setStatus(200);
         response.setContentType("application/json");

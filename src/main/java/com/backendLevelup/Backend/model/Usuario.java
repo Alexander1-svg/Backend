@@ -1,17 +1,20 @@
 package com.backendLevelup.Backend.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 @ToString
@@ -19,12 +22,11 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
-public class Usuario {
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @Column(nullable = false, unique = true)
     @NotBlank(message = "El campo nombre de usuario es obligatorio")
@@ -66,14 +68,9 @@ public class Usuario {
             inverseJoinColumns = @JoinColumn(name = "rol_id"),
             uniqueConstraints = {@UniqueConstraint(columnNames = {"usuario_id", "rol_id"})}
     )
-
     private List<Rol> roles = new ArrayList<>();
 
-    public Usuario(String nombre,
-                   String email,
-                   String password,
-                   LocalDate fechaNacimiento,
-                   boolean tieneDescuentoDuoc){
+    public Usuario(String nombre, String email, String password, LocalDate fechaNacimiento, boolean tieneDescuentoDuoc){
         this();
         this.nombre = nombre;
         this.email = email;
@@ -81,6 +78,39 @@ public class Usuario {
         this.fechaNacimiento = fechaNacimiento;
         this.tieneDescuentoDuoc = tieneDescuentoDuoc;
         this.enabled = true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (roles == null) return new ArrayList<>();
+        return roles.stream()
+                .map(rol -> new SimpleGrantedAuthority(rol.getNombre()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; // La cuenta nunca expira (puedes cambiar lógica si quieres)
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true; // La cuenta nunca se bloquea
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true; // Las credenciales no expiran
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled != null && this.enabled; // Usamos tu campo 'enabled'
     }
 
     @Override
@@ -109,5 +139,4 @@ public class Usuario {
 
     @Override
     public int hashCode(){return Objects.hash(id, nombre);}
-
 }
