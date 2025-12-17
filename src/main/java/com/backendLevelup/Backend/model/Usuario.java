@@ -61,7 +61,7 @@ public class Usuario implements UserDetails {
     private Audit audit = new Audit();
 
     @JsonIgnoreProperties({"Usuarios"})
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuarios_roles",
             joinColumns = @JoinColumn(name = "usuario_id"),
